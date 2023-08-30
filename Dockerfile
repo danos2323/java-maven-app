@@ -11,5 +11,5 @@ ARG APP_VERSION
 ENV APP_VERSION=${APP_VERSION}
 WORKDIR /app
 COPY --from=build /app/target/*.jar app-${APP_VERSION}.jar
-CMD ["java", "-jar", "app.jar"]
+CMD ["java", "-jar", "app-${APP_VERSION}.jar"]
 
