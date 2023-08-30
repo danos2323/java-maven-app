@@ -32,6 +32,10 @@ jobs:
 
         # Update pom.xml with the new version
         sed -i "s/<version>$CURRENT_VERSION-SNAPSHOT<\/version>/<version>$NEW_VERSION-SNAPSHOT<\/version>/" pom.xml
+        
+        # Check if there are changes to commit
+        git diff --exit-code pom.xml || git commit -am "Bump version to $NEW_VERSION"
+        git push
 
     - name: Build Docker Image
       run: |
