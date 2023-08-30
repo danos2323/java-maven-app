@@ -27,14 +27,9 @@ jobs:
       id: bump
       uses: mickem/gh-action-bump-maven-version@v1
 
-    - name: Debug Bump Output
-      run: |
-        echo "New Version: ${{ steps.bump.outputs.new_version }}"
-
-
     - name: Build Docker Image
       run: |
-        docker build -t my-java-app:latest --build-arg APP_VERSION=${{ steps.bump.outputs.new_version }} .
+        docker build -t my-java-app:latest .
 
     - name: Push Docker Image
       run: |
