@@ -33,6 +33,7 @@ jobs:
         # Update pom.xml with the new version
         sed -i "s/<version>$CURRENT_VERSION<\/version>/<version>$NEW_VERSION<\/version>/" pom.xml
         
+        # Configure Git identity for the runner
         git config user.email "danba2323@gmail.com"
         git config user.name "danos2323"
         
