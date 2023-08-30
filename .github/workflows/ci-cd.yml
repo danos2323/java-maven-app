@@ -28,9 +28,9 @@ jobs:
 
     - name: Build Docker Image
       run: |
-        docker build -t my-java-app:${{ github.sha }} .
+        docker build -t my-java-app:${{ new_version }} .
 
     - name: Push Docker Image
       run: |
-        docker tag my-java-app:${{ github.sha }} danos23/java-ci-cd:${{ github.sha }}
-        docker push danos23/java-ci-cd:${{ github.sha }}
+        docker tag my-java-app:${{ new_version }} danos23/java-ci-cd:${{ new_version }}
+        docker push danos23/java-ci-cd:${{ new_version }}
