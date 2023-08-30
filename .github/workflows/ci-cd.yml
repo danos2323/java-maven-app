@@ -20,8 +20,8 @@ jobs:
 
     - name: Bump Version Patch
       run: |
-         # Get the latest tag with "v" prefix, if available
-        LATEST_TAG=$(git describe --abbrev=0 --tags 2>/dev/null || echo "v1.0.0")
+        # Get the latest tag with "v" prefix, if available
+        LATEST_TAG=$(git describe --abbrev=0 --tags 2>/dev/null || echo "v0.0.0")
 
         # Parse the latest patch version and increment it
         PATCH=$(echo $LATEST_TAG | awk -F. '{print $3}')
@@ -32,7 +32,7 @@ jobs:
 
         # Update pom.xml with the new version
         sed -i "s/<version>$LATEST_TAG<\/version>/<version>$NEW_VERSION<\/version>/" pom.xml
-        
+
     - name: Build Docker Image
       run: |
         docker build -t my-java-app:latest .
