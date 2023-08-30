@@ -33,6 +33,9 @@ jobs:
         # Update pom.xml with the new version
         sed -i "s/<version>$CURRENT_VERSION<\/version>/<version>$NEW_VERSION<\/version>/" pom.xml
         
+        git config user.email "danba2323@gmail.com"
+        git config user.name "danos2323"
+        
         # Check if there are changes to commit
         git diff --exit-code pom.xml || git commit -am "Bump version to $NEW_VERSION"
         git push
