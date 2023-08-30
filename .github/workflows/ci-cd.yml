@@ -27,6 +27,7 @@ jobs:
       id: bump
       uses: mickem/gh-action-bump-maven-version@v1
 
+
     - name: Build Docker Image
       run: |
         docker build -t my-java-app:latest .
