@@ -30,10 +30,7 @@ jobs:
       run: |
         docker build -t my-java-app:${{ github.sha }} .
 
-    - name: Log into Docker Hub
-      run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-
     - name: Push Docker Image
       run: |
-        docker tag my-java-app:${{ github.sha }} ${{ secrets.DOCKER_REGISTRY }}/${{ github.repository }}:${{ github.sha }}
-        docker push ${{ secrets.DOCKER_REGISTRY }}/${{ github.repository }}:${{ github.sha }}
+        docker tag my-java-app:${{ github.sha }} danos23/java-ci-cd:${{ github.sha }}
+        docker push danos23/java-ci-cd:${{ github.sha }}
