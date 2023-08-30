@@ -1,0 +1,42 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+
+    - name: Set up JDK
+      uses: actions/setup-java@v2
+      with:
+        java-version: 11
+
+    - name: Build and Test
+      run: mvn package
+
+    - name: Bump Version Patch
+      run: |
+        version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+        parts=($(echo $version | tr '.' ' '))
+        new_patch=$((${parts[2]} + 1))
+        new_version="${parts[0]}.${parts[1]}.$new_patch"
+        mvn versions:set -DnewVersion=$new_version
+
+    - name: Build Docker Image
+      run: |
+        docker build -t my-java-app:${{ github.sha }} .
+
+    - name: Log into Docker Hub
+      run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+
+    - name: Push Docker Image
+      run: |
+        docker tag my-java-app:${{ github.sha }} ${{ secrets.DOCKER_REGISTRY }}/${{ github.repository }}:${{ github.sha }}
+        docker push ${{ secrets.DOCKER_REGISTRY }}/${{ github.repository }}:${{ github.sha }}
