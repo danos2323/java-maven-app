@@ -42,10 +42,10 @@ jobs:
       run: |
         echo "$PRIVATE_KEY" > deploy_key.pem
         chmod 600 deploy_key.pem
-        scp -i deploy_key.pem -o StrictHostKeyChecking=no ./script.sh ec2-user@34.201.160.79:/tmp/
+        scp -i deploy_key.pem -o StrictHostKeyChecking=no ./script.sh ubuntu@34.201.160.79:/tmp/
         # Change permissions of the deployment script on the remote server
-        ssh -i deploy_key.pem -o StrictHostKeyChecking=no ec2-user@34.201.160.79 "chmod +x /tmp/script.sh"
-        ssh -i deploy_key.pem -o StrictHostKeyChecking=no ec2-user@34.201.160.79 "/tmp/script.sh"
+        ssh -i deploy_key.pem -o StrictHostKeyChecking=no ubuntu@34.201.160.79 "chmod +x /tmp/script.sh"
+        ssh -i deploy_key.pem -o StrictHostKeyChecking=no ubuntu@34.201.160.79 "/tmp/script.sh"
         rm -f deploy_key.pem
 
     
