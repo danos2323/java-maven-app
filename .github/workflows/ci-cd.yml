@@ -37,15 +37,15 @@ jobs:
         docker push danos23/java-ci-cd:latest
         
     - name: Deploy to EC2
-        env:
-          PRIVATE_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
-        run: |
-          echo "$PRIVATE_KEY" > deploy_key.pem
-          chmod 600 deploy_key.pem
-          scp -i deploy_key.pem -o StrictHostKeyChecking=no ./script.sh ec2-user@34.201.160.79:/tmp/
-          # Change permissions of the deployment script on the remote server
-          ssh -i deploy_key.pem -o StrictHostKeyChecking=no ec2-user@34.201.160.79 "chmod +x /tmp/script.sh"
-          ssh -i deploy_key.pem -o StrictHostKeyChecking=no ec2-user@34.201.160.79 "/tmp/script.sh"
-          rm -f deploy_key.pem
+      env:
+        PRIVATE_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+      run: |
+        echo "$PRIVATE_KEY" > deploy_key.pem
+        chmod 600 deploy_key.pem
+        scp -i deploy_key.pem -o StrictHostKeyChecking=no ./script.sh ec2-user@34.201.160.79:/tmp/
+        # Change permissions of the deployment script on the remote server
+        ssh -i deploy_key.pem -o StrictHostKeyChecking=no ec2-user@34.201.160.79 "chmod +x /tmp/script.sh"
+        ssh -i deploy_key.pem -o StrictHostKeyChecking=no ec2-user@34.201.160.79 "/tmp/script.sh"
+        rm -f deploy_key.pem
 
     
