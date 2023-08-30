@@ -20,15 +20,23 @@ jobs:
 
     - name: Bump Version Patch
       run: |
-        version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
-        echo "Current version: $version"
-        parts=($(echo $version | tr '.' ' '))
-        echo "Version parts: ${parts[@]}"
-        new_patch=$((${parts[2]} + 1))
-        echo "New patch version: $new_patch"
-        new_version="${parts[0]}.${parts[1]}.$new_patch"
-        echo "New version: $new_version"
-        mvn versions:set -DnewVersion=$new_version
+        # Check for changes compared to the previous commit
+        CHANGED_FILES=$(git diff --name-only HEAD^ HEAD)
+        if [[ -z "$CHANGED_FILES" ]]; then
+          echo "No changes detected."
+          exit 0
+        fi
+        
+        # Extract the current version without the -SNAPSHOT suffix from pom.xml
+        CURRENT_VERSION=$(grep "<version>.*-SNAPSHOT</version>" pom.xml | head -1 | awk -F'[-><]' '{print $3}')
+        echo "Current Version: $CURRENT_VERSION"
+        
+        # Increment the patch version
+        NEW_VERSION=$(echo $CURRENT_VERSION | awk -F. '{$NF = $NF + 1;} 1' OFS=.)"-SNAPSHOT"
+        echo "New Version: $NEW_VERSION"
+        
+        # Update pom.xml with the new version
+        sed -i "s/<version>$CURRENT_VERSION-SNAPSHOT<\/version>/<version>$NEW_VERSION<\/version>/" pom.xml
 
     - name: Build Docker Image
       run: |
