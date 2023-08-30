@@ -29,10 +29,10 @@ jobs:
 
     - name: Build Docker Image
       run: |
-        docker build -t my-java-app:${{ steps.Bump_Version_Patch.outputs.new_version }} .
+        docker build -t my-java-app:latest .
 
     - name: Push Docker Image
       run: |
-        docker tag my-java-app:${{ steps.Bump_Version_Patch.outputs.new_version }} danos23/java-ci-cd:${{ steps.Bump_Version_Patch.outputs.new_version }}
-        docker push danos23/java-ci-cd:${{ steps.Bump_Version_Patch.outputs.new_version }}
+        docker tag my-java-app:latest danos23/java-ci-cd:latest
+        docker push danos23/java-ci-cd:latest
 
