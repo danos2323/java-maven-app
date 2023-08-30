@@ -3,7 +3,7 @@ FROM maven:3.8.6-openjdk-11 AS build
 WORKDIR /app
 COPY pom.xml .
 COPY src ./src
-RUN mvn package
+RUN mvn -B -DskipTests clean package
 
 # Use a lightweight Java image to run the application
 FROM openjdk:11-jre-slim
