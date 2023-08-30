@@ -18,17 +18,29 @@ jobs:
       with:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+    - name: Bump Version Patch
+      run: |
+        # Extract the current version from pom.xml
+        CURRENT_VERSION=$(grep "<version>.*</version>" pom.xml | head -1 | awk -F'[-><]' '{print $3}')
+        echo "Current Version: $CURRENT_VERSION"
+
+        # Increment the patch version
+        IFS='.' read -r -a parts <<< "$CURRENT_VERSION"
+        new_patch=$((parts[2] + 1))
+        NEW_VERSION="${parts[0]}.${parts[1]}.$new_patch"
+        echo "New Version: $NEW_VERSION"
+
+        # Update pom.xml with the new version
+        sed -i "s/<version>$CURRENT_VERSION<\/version>/<version>$NEW_VERSION<\/version>/" pom.xml
         
-    - name: Automated Github Action Maven Version Bump
-      uses: mickem/gh-action-bump-maven-version@v1.0.0
-            
-    - name: Automated Maven Version Bump
-      uses: korny/automated-github-action-maven-version-bump@v1
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        commit_message: 'Bump version to %s'
-        push_changes: true
-        pull_request: true
+        # Configure Git identity for the runner
+        git config user.email "${{ secrets.GH_EMAIL }}"
+        git config user.name "${{ secrets.GH_NAME }}"
+        
+        # Check if there are changes to commit
+        git diff --exit-code pom.xml || git commit -am "Bump version to $NEW_VERSION"
+        git push
 
     - name: Build Docker Image
       run: |
