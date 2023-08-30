@@ -35,4 +35,3 @@ jobs:
       run: |
         docker tag my-java-app:latest danos23/java-ci-cd:latest
         docker push danos23/java-ci-cd:latest
-
