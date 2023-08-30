@@ -25,12 +25,14 @@ jobs:
         new_patch=$((${parts[2]} + 1))
         new_version="${parts[0]}.${parts[1]}.$new_patch"
         mvn versions:set -DnewVersion=$new_version
+        echo "New version: $new_version"  # This line will print the new version to the workflow log
 
     - name: Build Docker Image
       run: |
-        docker build -t my-java-app:${{ new_version }} .
+        docker build -t my-java-app:${{ steps.Bump_Version_Patch.outputs.new_version }} .
 
     - name: Push Docker Image
       run: |
-        docker tag my-java-app:${{ new_version }} danos23/java-ci-cd:${{ new_version }}
-        docker push danos23/java-ci-cd:${{ new_version }}
+        docker tag my-java-app:${{ steps.Bump_Version_Patch.outputs.new_version }} danos23/java-ci-cd:${{ steps.Bump_Version_Patch.outputs.new_version }}
+        docker push danos23/java-ci-cd:${{ steps.Bump_Version_Patch.outputs.new_version }}
+
