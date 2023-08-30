@@ -30,7 +30,7 @@ jobs:
 
     - name: Build Docker Image
       run: |
-        docker build -t my-java-app:latest .
+        docker build -t my-java-app:latest --build-arg APP_VERSION=${{ steps.bump.outputs.new_version }} .
 
     - name: Push Docker Image
       run: |
