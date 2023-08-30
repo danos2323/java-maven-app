@@ -21,11 +21,14 @@ jobs:
     - name: Bump Version Patch
       run: |
         version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+        echo "Current version: $version"
         parts=($(echo $version | tr '.' ' '))
+        echo "Version parts: ${parts[@]}"
         new_patch=$((${parts[2]} + 1))
+        echo "New patch version: $new_patch"
         new_version="${parts[0]}.${parts[1]}.$new_patch"
+        echo "New version: $new_version"
         mvn versions:set -DnewVersion=$new_version
-        echo "New version: $new_version"  # This line will print the new version to the workflow log
 
     - name: Build Docker Image
       run: |
