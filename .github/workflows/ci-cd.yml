@@ -20,13 +20,6 @@ jobs:
 
     - name: Bump Version Patch
       run: |
-        # Check for changes compared to the previous commit
-        CHANGED_FILES=$(git diff --name-only HEAD^ HEAD)
-        if [[ -z "$CHANGED_FILES" ]]; then
-          echo "No changes detected."
-          exit 0
-        fi
-        
         # Extract the current version without the -SNAPSHOT suffix from pom.xml
         CURRENT_VERSION=$(grep "<version>.*-SNAPSHOT</version>" pom.xml | head -1 | awk -F'[-><]' '{print $3}')
         echo "Current Version: $CURRENT_VERSION"
